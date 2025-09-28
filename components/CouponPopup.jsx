@@ -14,31 +14,6 @@ export default function CategoryPopup({
   const [products, setProducts] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
-  const [animatedDiscount, setAnimatedDiscount] = useState(0);
-
-  // ✅ Animation for discount
-  useEffect(() => {
-    if (
-      !selectedProduct ||
-      !selectedProduct.price ||
-      !selectedProduct.originalPrice
-    )
-      return;
-
-    const target = getDiscountPercentage(selectedProduct);
-    let start = 0;
-    const duration = 1200; // 1.2s smooth animation
-    const stepTime = Math.max(16, duration / target);
-
-    const animate = () => {
-      start += 1;
-      if (start <= target) {
-        setAnimatedDiscount(start);
-        requestAnimationFrame(animate);
-      }
-    };
-    animate();
-  }, [selectedProduct]);
 
   // ✅ Function for discount % calc
   const getDiscountPercentage = (product) => {
@@ -127,7 +102,7 @@ export default function CategoryPopup({
 
   // ✅ Handle image safely
   const handleImageError = (e) => {
-    e.target.src = "/placeholder-image.jpg";
+    e.target.src = "/placeholder.svg?height=240&width=240";
   };
 
   // -------------------------------
@@ -157,7 +132,7 @@ export default function CategoryPopup({
               {selectedProduct.price && selectedProduct.originalPrice && (
                 <div className="mt-2">
                   <span className="bg-[#f59e0b]/10 text-[#f59e0b] px-3 py-1 rounded-lg font-semibold">
-                    Save {animatedDiscount}% OFF
+                    Save {getDiscountPercentage(selectedProduct)}% OFF
                   </span>
                 </div>
               )}
@@ -165,7 +140,7 @@ export default function CategoryPopup({
               <div className="flex items-center gap-3 mb-4 mt-2">
                 {selectedProduct.logo && (
                   <Image
-                    src={selectedProduct.logo}
+                    src={selectedProduct.logo || "/placeholder.svg"}
                     height={40}
                     width={40}
                     alt="logo"
@@ -249,7 +224,7 @@ export default function CategoryPopup({
                       }`}
                     >
                       <Image
-                        src={img}
+                        src={img || "/placeholder.svg"}
                         height={40}
                         width={40}
                         onError={handleImageError}
@@ -322,7 +297,9 @@ export default function CategoryPopup({
                   >
                     <div className="flex items-start gap-4">
                       <img
-                        src={product.image || "/placeholder-image.jpg"}
+                        src={
+                          product.image || "/placeholder.svg?height=64&width=64"
+                        }
                         onError={handleImageError}
                         alt={product.name}
                         className="w-16 h-16 object-contain rounded-lg"
@@ -367,7 +344,10 @@ export default function CategoryPopup({
                   <div className="space-y-4">
                     <div className="flex justify-center">
                       <Image
-                        src={selectedProduct.image || "/placeholder-image.jpg"}
+                        src={
+                          selectedProduct.image ||
+                          "/placeholder.svg?height=240&width=240"
+                        }
                         height={240}
                         width={240}
                         onError={handleImageError}
